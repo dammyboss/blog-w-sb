@@ -1,0 +1,50 @@
+trigger:
+  - main   # or your branch name
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  # Install Node.js
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'   # Use your Node version
+    displayName: 'Install Node.js'
+
+  # Install dependencies
+  - script: |
+      npm install
+    displayName: 'Install dependencies'
+
+  # Build the app (optional — remove if not needed)
+  - script: |
+      npm run dev
+    displayName: 'Build app'
+
+  # Archive build output
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+      replaceExistingArchive: true
+    displayName: 'Archive app files'
+
+  # Publish artifact
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
+    displayName: 'Publish artifact'
+
+  # Deploy to Azure App Service
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: 'Visual Studio Enterprise(85c7908d-8028-4894-af5d-1991ee8f0450)'
+      appType: 'webAppLinux'
+      appName: 'blog-app'
+      package: '$(Build.ArtifactStagingDirectory)/app.zip'
+      runtimeStack: 'NODE|22-lts'
+    displayName: 'Deploy to Azure App Service'
