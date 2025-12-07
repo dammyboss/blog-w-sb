@@ -21,7 +21,15 @@ steps:
       npm run build
     displayName: 'Build production app'
 
-  # Archive build output (dist folder)
+  # Debug: show what was built
+  - script: |
+      echo "Listing workspace..."
+      ls -la
+      echo "Listing build output..."
+      ls -la dist || echo "dist folder not found"
+    displayName: 'Debug build output'
+
+  # Archive build output
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist'
