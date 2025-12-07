@@ -1,35 +1,35 @@
 trigger:
-  - main   # or your branch name
+  - main
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  # Install Node.js
+  # Install Node.js 20+
   - task: NodeTool@0
     inputs:
-      versionSpec: '18.x'   # Use your Node version
-    displayName: 'Install Node.js'
+      versionSpec: '20.x'
+    displayName: 'Install Node.js 20'
 
   # Install dependencies
   - script: |
       npm install
     displayName: 'Install dependencies'
 
-  # Build the app (optional — remove if not needed)
+  # Build the production bundle
   - script: |
-      npm run dev
-    displayName: 'Build app'
+      npm run build
+    displayName: 'Build production app'
 
-  # Archive build output
+  # Archive build output (dist folder)
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist'
       includeRootFolder: false
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
       replaceExistingArchive: true
-    displayName: 'Archive app files'
+    displayName: 'Archive build output'
 
   # Publish artifact
   - task: PublishBuildArtifacts@1
