@@ -24,18 +24,27 @@ steps:
       echo "Listing workspace..."
       ls -la
       echo "Listing build output..."
-      ls -la out || echo "out folder not found"
+      ls -la out/
+      echo "Checking package.json start script..."
+      cat package.json | grep '"start"'
     displayName: 'Debug build output'
 
-  # Archive build output (out folder)
+  # Archive the entire project (excluding node_modules, .git, etc.) for deployment
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: '$(System.DefaultWorkingDirectory)/out'
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
       includeRootFolder: false
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
       replaceExistingArchive: true
-    displayName: 'Archive build output'
+      excludeFiles: |
+        **/node_modules/**
+        **/.git/**
+        **/.github/**
+        **/.vscode/**
+        **/*.log
+        **/azure-pipelines.yml
+    displayName: 'Archive project for deployment'
 
   # Publish artifact
   - task: PublishBuildArtifacts@1
