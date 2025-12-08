@@ -5,60 +5,36 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  # Install Node.js 20+
   - task: NodeTool@0
     inputs:
       versionSpec: '20.x'
     displayName: 'Install Node.js 20'
 
-  # Install dependencies
   - script: npm install
     displayName: 'Install dependencies'
 
-  # Create .env file for build
-  - script: |
-      echo "VITE_PUBLIC_SUPABASE_ANON_KEY=\"sb_publishable_s-VKtLV93ze7wJnAcT2NhA_hqPF778F\"" > .env
-      echo "VITE_PUBLIC_SUPABASE_URL=\"https://mjkmpflacomyqqfyytqx.supabase.co\"" >> .env
-    displayName: 'Create .env for build'
-
-  # Build the production bundle
-  - script: |
-      export BASE_PATH="/"
-      export IS_PREVIEW="false"
-      export PROJECT_ID=""
-      export VERSION_ID=""
-      export READDY_AI_DOMAIN=""
-      npm run build
+  - script: npm run build
     displayName: 'Build production app'
+    env:
+      VITE_PUBLIC_SUPABASE_URL: $(VITE_PUBLIC_SUPABASE_URL)
+      VITE_PUBLIC_SUPABASE_ANON_KEY: $(VITE_PUBLIC_SUPABASE_ANON_KEY)
 
-  # Debug: show what was built
   - script: |
       echo "Listing workspace..."
       ls -la
       echo "Listing build output..."
       ls -la out/
-      echo "Checking package.json start script..."
-      cat package.json | grep '"start"'
     displayName: 'Debug build output'
 
-  # Archive the entire project (excluding node_modules, .git, etc.) for deployment
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)/out'
       includeRootFolder: false
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
       replaceExistingArchive: true
-      excludeFiles: |
-        **/node_modules/**
-        **/.git/**
-        **/.github/**
-        **/.vscode/**
-        **/*.log
-        **/azure-pipelines.yml
-    displayName: 'Archive project for deployment'
+    displayName: 'Archive build output'
 
-  # Publish artifact
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -66,7 +42,6 @@ steps:
       publishLocation: 'Container'
     displayName: 'Publish artifact'
 
-  # Deploy to Azure App Service
   - task: AzureWebApp@1
     inputs:
       azureSubscription: 'Visual Studio Enterprise(85c7908d-8028-4894-af5d-1991ee8f0450)'
@@ -74,5 +49,4 @@ steps:
       appName: 'blog-app'
       package: '$(Build.ArtifactStagingDirectory)/app.zip'
       runtimeStack: 'NODE|22-lts'
-      appSettings: '-WEBSITE_NODE_DEFAULT_VERSION "~22"'
     displayName: 'Deploy to Azure App Service'
