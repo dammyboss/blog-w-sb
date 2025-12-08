@@ -16,6 +16,4 @@ else
     echo "node_modules is up to date."
 fi
 
-# Start the application
-echo "Starting the application..."
-npm start
+echo "Deployment script completed. The App Service will start the application via 'npm start'."
