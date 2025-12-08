@@ -1,6 +1,9 @@
 trigger:
   - none
 
+variables:
+- group: SWA-Vars
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -34,3 +37,8 @@ steps:
       azure_static_web_apps_api_token: $(SWA_DEPLOYMENT_TOKEN)
       production_branch: 'main'
     displayName: 'Deploy to Azure Static Web Apps'
+
+  - script: |
+      echo "ZIP CONTENTS:"
+      ls -R out
+    displayName: 'Debug ZIP contents'
