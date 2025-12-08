@@ -4,6 +4,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+
 steps:
   - task: NodeTool@0
     inputs:
@@ -29,6 +30,7 @@ steps:
       app_location: '/'
       api_location: ''
       output_location: 'out'
+      skip_app_build: true
       azure_static_web_apps_api_token: $(SWA_DEPLOYMENT_TOKEN)
       production_branch: 'main'
     displayName: 'Deploy to Azure Static Web Apps'
