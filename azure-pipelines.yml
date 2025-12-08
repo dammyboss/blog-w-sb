@@ -15,8 +15,20 @@ steps:
   - script: npm install
     displayName: 'Install dependencies'
 
+  # Create .env file for build
+  - script: |
+      echo "VITE_PUBLIC_SUPABASE_ANON_KEY=\"sb_publishable_s-VKtLV93ze7wJnAcT2NhA_hqPF778F\"" > .env
+      echo "VITE_PUBLIC_SUPABASE_URL=\"https://mjkmpflacomyqqfyytqx.supabase.co\"" >> .env
+    displayName: 'Create .env for build'
+
   # Build the production bundle
-  - script: npm run build
+  - script: |
+      export BASE_PATH="/"
+      export IS_PREVIEW="false"
+      export PROJECT_ID=""
+      export VERSION_ID=""
+      export READDY_AI_DOMAIN=""
+      npm run build
     displayName: 'Build production app'
 
   # Debug: show what was built
@@ -62,4 +74,5 @@ steps:
       appName: 'blog-app'
       package: '$(Build.ArtifactStagingDirectory)/app.zip'
       runtimeStack: 'NODE|22-lts'
+      appSettings: '-WEBSITE_NODE_DEFAULT_VERSION "~22"'
     displayName: 'Deploy to Azure App Service'
