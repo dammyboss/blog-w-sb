@@ -1,5 +1,5 @@
 trigger:
-  - main
+  - none
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -20,33 +20,15 @@ steps:
       VITE_PUBLIC_SUPABASE_ANON_KEY: $(VITE_PUBLIC_SUPABASE_ANON_KEY)
 
   - script: |
-      echo "Listing workspace..."
-      ls -la
       echo "Listing build output..."
       ls -la out/
     displayName: 'Debug build output'
 
-  - task: ArchiveFiles@2
+  - task: AzureStaticWebApp@0
     inputs:
-      rootFolderOrFile: '$(System.DefaultWorkingDirectory)/out'
-      includeRootFolder: false
-      archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
-      replaceExistingArchive: true
-    displayName: 'Archive build output'
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'drop'
-      publishLocation: 'Container'
-    displayName: 'Publish artifact'
-
-  - task: AzureWebApp@1
-    inputs:
-      azureSubscription: 'Visual Studio Enterprise(85c7908d-8028-4894-af5d-1991ee8f0450)'
-      appType: 'webAppLinux'
-      appName: 'blog-app'
-      package: '$(Build.ArtifactStagingDirectory)/app.zip'
-      runtimeStack: 'NODE|22-lts'
-    displayName: 'Deploy to Azure App Service'
+      app_location: '/'
+      api_location: ''
+      output_location: 'out'
+      azure_static_web_apps_api_token: $(SWA_DEPLOYMENT_TOKEN)
+      production_branch: 'main'
+    displayName: 'Deploy to Azure Static Web Apps'
