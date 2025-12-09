@@ -3,11 +3,12 @@
     "rewrite": "/index.html",
     "exclude": ["/assets/*", "favicon.ico"]
   },
-  "responseOverrides": {
-    "/videos": {
+  "routes": [
+    {
+      "route": "/videos",
       "headers": {
         "Permissions-Policy": "unload=()"
       }
     }
-  }
+  ]
 }
