@@ -19,6 +19,7 @@ All notable changes to the DevOpsWithDami project are documented in this file.
 - **Azure deployment**: Migrated from Azure App Service to Azure Static Web Apps; updated pipeline configuration.
 - **Environment variables**: Pipeline now injects Supabase credentials at build time for Static Web Apps.
 - **Navbar search**: Fixed video thumbnail display and click‑to‑open modal.
+- **Author profile**: Updated article detail page with correct author name ("Dami Ondeinde"), local avatar image, and social links (GitHub, LinkedIn, YouTube).
 
 ### Fixed
 - **Video thumbnails in search results**: Changed `video.thumbnail_url` to `video.thumbnail`.

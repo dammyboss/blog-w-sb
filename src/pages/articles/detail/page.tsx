@@ -63,8 +63,8 @@ export default function ArticleDetailPage() {
         tags: data.tags || [],
         views: data.views || 0,
         author: {
-          name: 'Dami Johnson',
-          avatar: 'https://readdy.ai/api/search-image?query=professional%20tech%20writer%20author%20headshot%20portrait%20simple%20clean%20background%20confident%20smile&width=120&height=120&seq=author-detail&orientation=squarish',
+          name: 'Dami Ondeinde',
+          avatar: '/author-avatar.jpg',
           bio: 'DevOps Engineer and Technical Writer with 10+ years of experience in cloud infrastructure and containerization.',
         },
       });
@@ -256,11 +256,14 @@ export default function ArticleDetailPage() {
                     <a href="#" className="text-accent-cyan hover:text-accent-cyan-light transition-colors duration-300 cursor-pointer">
                       <i className="ri-twitter-x-line text-xl"></i>
                     </a>
-                    <a href="#" className="text-accent-cyan hover:text-accent-cyan-light transition-colors duration-300 cursor-pointer">
+                    <a href="https://linkedin.com/in/damilola-onadeinde" className="text-accent-cyan hover:text-accent-cyan-light transition-colors duration-300 cursor-pointer">
                       <i className="ri-linkedin-fill text-xl"></i>
                     </a>
-                    <a href="#" className="text-accent-cyan hover:text-accent-cyan-light transition-colors duration-300 cursor-pointer">
+                    <a href="https://github.com/dammyboss" className="text-accent-cyan hover:text-accent-cyan-light transition-colors duration-300 cursor-pointer">
                       <i className="ri-github-fill text-xl"></i>
+                    </a>
+                    <a href="https://youtube.com/@devopswithdami" className="text-accent-cyan hover:text-accent-cyan-light transition-colors duration-300 cursor-pointer">
+                      <i className="ri-youtube-line text-xl"></i>
                     </a>
                   </div>
                 </div>
