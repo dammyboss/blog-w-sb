@@ -21,6 +21,7 @@ export interface Article {
   publish_date: string;
   created_at: string;
   updated_at: string;
+  views: number;
 }
 
 export interface Video {
@@ -31,8 +32,28 @@ export interface Video {
   category: string;
   thumbnail: string;
   duration: string;
-  views: string;
+  views: string; // keep as string for compatibility, but consider integer later
   publish_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Like {
+  id: string;
+  user_ip: string | null;
+  article_id: string | null;
+  video_id: string | null;
+  created_at: string;
+}
+
+export interface Comment {
+  id: string;
+  user_name: string | null;
+  content: string;
+  article_id: string | null;
+  video_id: string | null;
+  parent_id: string | null;
+  approved: boolean;
   created_at: string;
   updated_at: string;
 }

@@ -1,6 +1,18 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
+import LikeButton from '../../../components/feature/LikeButton';
+import CommentSection from '../../../components/feature/CommentSection';
+
+const formatViews = (views: number) => {
+  if (views >= 1000000) {
+    return (views / 1000000).toFixed(1) + 'M';
+  }
+  if (views >= 1000) {
+    return (views / 1000).toFixed(1) + 'K';
+  }
+  return views.toString();
+};
 
 export default function ArticleDetailPage() {
   const { id } = useParams();
@@ -29,20 +41,27 @@ export default function ArticleDetailPage() {
         return;
       }
 
+      // Increment views
+      await supabase
+        .from('articles')
+        .update({ views: (data.views || 0) + 1 })
+        .eq('id', id);
+
       setArticle({
         id: data.id,
         title: data.title,
         content: data.content,
         category: data.category,
         readTime: data.reading_time,
-        date: new Date(data.publish_date).toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric' 
+        date: new Date(data.publish_date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
         }),
         image: data.featured_image,
         excerpt: data.excerpt,
         tags: data.tags || [],
+        views: data.views || 0,
         author: {
           name: 'Dami Johnson',
           avatar: 'https://readdy.ai/api/search-image?query=professional%20tech%20writer%20author%20headshot%20portrait%20simple%20clean%20background%20confident%20smile&width=120&height=120&seq=author-detail&orientation=squarish',
@@ -167,7 +186,10 @@ export default function ArticleDetailPage() {
             </div>
             <div className="flex items-center space-x-2">
               <i className="ri-eye-line text-accent-cyan"></i>
-              <span>12.5K views</span>
+              <span>{formatViews(article.views + 1)} views</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <LikeButton articleId={article.id} />
             </div>
           </div>
         </div>
@@ -246,6 +268,10 @@ export default function ArticleDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Comment Section */}
+        <CommentSection articleId={article.id} />
+
       </section>
 
       {/* Related Articles */}
